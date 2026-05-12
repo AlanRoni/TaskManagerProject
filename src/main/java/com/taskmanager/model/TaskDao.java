@@ -3,16 +3,33 @@ package com.taskmanager.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.taskmanager.util.HibernateUtil;
+
+
 public class TaskDao {
 
+    
+
     List<Task> tasks = new ArrayList<>();
-    public List<Task> viewtasks(){
-        return tasks;
-    }
+    
     public String addTasks(Task t){
-        tasks.add(t);
+        try{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(t);
+        transaction.commit();
+        session.close();
+        }
+        catch(Exception e){
+            return e.getMessage();
+        }
         return "Task added";
     }
+
+    punh
     public String removeTask(int i){
         tasks.remove(i);
         return "Task removed";
