@@ -23,7 +23,7 @@
         <property name="hibernate.hbm2ddl.auto">create</property>
 
         <!-- Entity classes -->
-        <mapping class="com.taskmanager.Task"/>
+        <mapping class="com.taskmanager.model.Task"/>
 
     </session-factory>
 </hibernate-configuration>

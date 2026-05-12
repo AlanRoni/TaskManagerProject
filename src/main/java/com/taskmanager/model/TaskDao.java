@@ -1,6 +1,5 @@
 package com.taskmanager.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -10,6 +9,7 @@ import com.taskmanager.util.HibernateUtil;
 
 public class TaskDao {
 
+    @SuppressWarnings("UseSpecificCatch")
     public String addTasks(Task t) {
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
@@ -26,7 +26,7 @@ public class TaskDao {
     public List<Task> viewTasks() {
 
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Task> tasks = session.createQuery("FROM Tasks", Task.class).list();
+        List<Task> tasks = session.createQuery("FROM Task", Task.class).list();
         session.close();
         return tasks;
     }
@@ -36,19 +36,31 @@ public class TaskDao {
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.createMutationQuery("Delete from Tasks where id = :id").setParameter("id", i).executeUpdate();
+            session.createMutationQuery("Delete from Task where id = :id").setParameter("id", i).executeUpdate();
             transaction.commit();
         }
         return "Task Removed";
     }
 
     public String markTask(int i) {
-        tasks.get(i).setStatus(true);
-        return "Task marked as done";
-    }
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        Task t = (session.find(Task.class, i));
+        t.setStatus(true);
+        session.merge(t);
+        transaction.commit();
+        session.close();
+        return "Marked as done";
+}
 
     public String updateTask(int i, String desc) {
-        tasks.get(i).setTask(desc);
-        return "Task " + i + " updated";
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        Task t = session.find(Task.class, i);
+        t.setTask(desc);
+        session.merge(t);
+        transaction.commit();
+        session.close();
+        return "Task Updated";
     }
 }
