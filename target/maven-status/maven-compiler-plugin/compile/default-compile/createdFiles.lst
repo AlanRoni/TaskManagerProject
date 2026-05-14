@@ -1,1 +1,4 @@
+com\taskmanager\model\Task.class
+com\taskmanager\util\HibernateUtil.class
+com\taskmanager\model\TaskDao.class
 com\taskmanager\App.class
